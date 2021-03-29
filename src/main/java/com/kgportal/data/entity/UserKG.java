@@ -1,5 +1,7 @@
 package com.kgportal.data.entity;
 
+import java.util.Date;
+
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
@@ -20,6 +22,9 @@ public class UserKG {
 	@Id
 	private String username;
 	private String password;
+	private String name;
+	private String surname;
+	private Date birthDay;
 	
 	@Enumerated(EnumType.STRING)
 	private UserRole role;

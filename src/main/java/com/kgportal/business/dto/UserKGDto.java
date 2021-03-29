@@ -1,5 +1,7 @@
 package com.kgportal.business.dto;
 
+import java.util.Date;
+
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
@@ -28,5 +30,14 @@ public class UserKGDto {
 	
 	@NotNull
 	private UserRole role;
+	
+	@NotNull
+	private String name;
+	
+	@NotNull
+	private String surname;
+	
+	@NotNull
+	private Date birthDay;
 
 }

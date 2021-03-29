@@ -1,5 +1,9 @@
 package com.kgportal.business.impl;
 
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -59,11 +63,39 @@ public class UserServiceImpl implements UserService{
 
 	
 	
+	
+	@Override
+	public List<UserKGDto> getBirthDays() {
+		List<UserKG> list = new ArrayList<>();
+		LocalDate myObj = LocalDate.now();
+		list = userRepository.birthdays(); 
+		List<UserKGDto> list2 = new ArrayList<>();
+		
+		for(UserKG user: list ) { 
+			UserKGDto userDto = new UserKGDto();
+			convertToDto(user, userDto);
+			list2.add(userDto);
+		}
+		
+
+		
+		return list2;
+	}
+	
+	
+	
+	
+	
+	
+	
 	public void convertToEntity(UserKG user, UserKGDto userDto) {		
 		
 		user.setUsername(userDto.getUsername());
 		user.setPassword(userDto.getPassword());
 		user.setRole(userDto.getRole());
+		user.setBirthDay(userDto.getBirthDay());
+		user.setName(userDto.getName());
+		user.setSurname(userDto.getSurname());
 		
 
 	}
@@ -73,7 +105,13 @@ public class UserServiceImpl implements UserService{
 		userDto.setUsername(user.getUsername());
 		userDto.setPassword(user.getPassword());
 		userDto.setRole(user.getRole());
+		userDto.setBirthDay(user.getBirthDay());
+		userDto.setName(user.getName());
+		userDto.setSurname(user.getSurname());
+		
 	}
+
+
 
 
 
