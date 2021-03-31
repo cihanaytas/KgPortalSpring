@@ -3,6 +3,7 @@ package com.kgportal.business.impl;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -51,14 +52,12 @@ public class UserServiceImpl implements UserService{
 		SecurityContextHolder.getContext().setAuthentication(authentication);
 		String jwt = "Bearer " + jwtUtils.generateJwtToken(authentication);
 		
+		Optional<UserKG> ukg = userRepository.findById(user.getUsername());
+		
 
 
-
-		return ResponseEntity.ok(new JwtResponse(jwt, 
-												 "1", 
-												 user.getUsername(), 
-												 "aaaaaaaa", 
-												 "ROLE_ADMIN"));
+		return ResponseEntity.ok(new JwtResponse(jwt,
+												 ukg.get()));
 	}
 
 	
