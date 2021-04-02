@@ -76,8 +76,6 @@ public class UserServiceImpl implements UserService{
 			list2.add(userDto);
 		}
 		
-
-		
 		return list2;
 	}
 	
