@@ -1,8 +1,9 @@
 package com.kgportal.data.entity;
 
-
 import java.io.Serializable;
 import java.util.Date;
+
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -10,8 +11,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.validation.constraints.NotNull;
-
+import javax.persistence.OneToOne;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -20,34 +20,29 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class Talep implements Serializable{
+ public class UserOrganization implements Serializable{
 
-	private static final long serialVersionUID = 1L;
+
 
 	@Id @GeneratedValue(strategy = GenerationType.IDENTITY)
 	private long id;
 	
-
-	private Date tarih;
-	
-	@ManyToOne
+	@OneToOne
 	@JoinColumn(name = "username")
 	private UserKG user;
 	
-	private String roltanim;
+	@ManyToOne(cascade = CascadeType.MERGE)  //fetchtype hata veriyor
+	@JoinColumn(name = "YoneticiUsername")
+	private UserKG userYonetici;
 	
- 	private String proje;
+	private Date iseGirisTarih;
 	
-	@NotNull
-	private String rol;
+	private String proje;
 	
-	@NotNull
-	private int sayi;
+	private String unvan;
 	
-	@NotNull
-	private long butce;
 	
-	private String onay;
+	
 	
 	
 	

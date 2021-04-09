@@ -100,7 +100,6 @@ public class UserServiceImpl implements UserService{
 	
 	public void convertToDto(UserKG user, UserKGDto userDto) {
 		userDto.setUsername(user.getUsername());
-		userDto.setPassword(user.getPassword());
 		userDto.setRole(user.getRole());
 		userDto.setBirthDay(user.getBirthDay());
 		userDto.setName(user.getName());
