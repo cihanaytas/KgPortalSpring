@@ -16,4 +16,3 @@ public interface UserRepository extends CrudRepository<UserKG, String>{
  
 }
 
-//DB yi açar mısın
