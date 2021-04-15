@@ -16,6 +16,7 @@ import com.kgportal.data.entity.Talep;
 import com.kgportal.data.entity.UserKG;
 import com.kgportal.data.repository.TalepRepository;
 import com.kgportal.data.repository.UserRepository;
+import com.kgportal.utils.SendMail;
 
 @Service
 public class TalepServiceImpl implements TalepService{
@@ -25,6 +26,9 @@ public class TalepServiceImpl implements TalepService{
 	
 	@Autowired
 	private TalepRepository talepRepository;
+	
+	@Autowired
+	private SendMail mailSender;
 
 	@Override
 	public Boolean save(TalepDto talepDto) {
@@ -67,6 +71,26 @@ public class TalepServiceImpl implements TalepService{
 		}
 		return listDto;
 	}
+	
+	
+	@Override
+	public Boolean AdminUpdateOnay(Talep talep, long talepId) {
+		if(talep.getOnay().equals("Onaylandı")){	
+			mailSender.sendMail(talep.getUser().getUsername(), talepId + " no'lu izin talebiniz İK tarafından onaylanmıştır."
+					, "İzin Talebi Onay Bilgilendirme");
+			
+		}
+		
+		else if(talep.getOnay().equals("Reddedildi")) {
+			mailSender.sendMail(talep.getUser().getUsername(), talepId + " no'lu izin talebiniz İK tarafından reddedilmiştir."
+					, "İzin Talebi Onay Bilgilendirme");			
+		}	
+		
+		if(talepRepository.save(talep) != null)
+			return true;
+		else
+			return false;
+	}
 
 	
 	private void convertToEntity(Talep talep, TalepDto talepDto) {
@@ -90,6 +114,8 @@ public class TalepServiceImpl implements TalepService{
 		talepDto.setName(talep.getUser().getName());
 		talepDto.setSurname(talep.getUser().getSurname());
 	}
+
+
 
 
 }

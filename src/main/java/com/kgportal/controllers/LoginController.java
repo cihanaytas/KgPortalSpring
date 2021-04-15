@@ -42,7 +42,6 @@ public class LoginController {
 	    
 		@PostMapping("/signin")
 		public ResponseEntity<?> authenticateUser(@RequestBody LoginBody user) {
-
 			return userService.loginUser(user);
 		}
 	    

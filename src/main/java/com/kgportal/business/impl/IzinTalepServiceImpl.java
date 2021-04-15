@@ -15,6 +15,7 @@ import com.kgportal.data.entity.UserKG;
 import com.kgportal.data.repository.IzinTalepRepository;
 import com.kgportal.data.repository.UserOrganizationRepository;
 import com.kgportal.data.repository.UserRepository;
+import com.kgportal.utils.SendMail;
 
 @Service
 public class IzinTalepServiceImpl implements IzinTalepService{
@@ -27,6 +28,9 @@ public class IzinTalepServiceImpl implements IzinTalepService{
 	
 	@Autowired
 	private IzinTalepRepository itrep;
+	
+	@Autowired
+	private SendMail mailSender;
 
 	@Override
 	public Boolean save(IzinTalepDto izinTalepDto) {
@@ -39,13 +43,61 @@ public class IzinTalepServiceImpl implements IzinTalepService{
 		izinTalep.setUser(user.get());
 		izinTalep.setUserYonetici(userYonetici);
 		izinTalepDto.setOnayDurum("yonetici");
-		converToEntity(izinTalep,izinTalepDto);
+		mailSender.sendMail(userYonetici.getUsername(), user.get().getName() + " " +  user.get().getSurname() + " izin talebinde bulundu."
+				, "Personel İzin Talebi");	
+		converToEntity(izinTalep,izinTalepDto);			
+		
 		if(itrep.save(izinTalep) != null)
 			return true;
 		else
 			return false;
 	}
 	
+	
+	@Override
+	public Boolean YoneticiUpdateOnay(IzinTalep izinTalep, long talepId) {
+
+		if(izinTalep.getOnayDurum().equals("ik")) {
+			mailSender.sendMail(izinTalep.getUser().getUsername(), talepId + " no'lu izin talebiniz yöneticiniz " + izinTalep.getUserYonetici().getName() 
+					+" " + izinTalep.getUserYonetici().getSurname() +  " tarafından onaylanıp İK'ya iletilmiştir."
+					, "İzin Talebi Onay Bilgilendirme");			
+		}
+		
+		else if(izinTalep.getOnayDurum().equals("Reddedildi")) {
+			mailSender.sendMail(izinTalep.getUser().getUsername(), talepId + " no'lu izin talebiniz yöneticiniz " + izinTalep.getUserYonetici().getName() 
+					+" " + izinTalep.getUserYonetici().getSurname() +  " tarafından reddedilmiştir."
+					, "İzin Talebi Onay Bilgilendirme");			
+		}
+
+		if(itrep.save(izinTalep) != null)
+			return true;
+		else
+			return false;
+	}
+	
+
+	
+	@Override
+	public Boolean AdminUpdateOnay(IzinTalep izinTalep, long talepId) {
+
+		if(izinTalep.getOnayDurum().equals("Onaylandı")){	
+			mailSender.sendMail(izinTalep.getUser().getUsername(), talepId + " no'lu izin talebiniz İK tarafından onaylanmıştır."
+					, "İzin Talebi Onay Bilgilendirme");
+			
+		}
+		
+		else if(izinTalep.getOnayDurum().equals("Reddedildi")) {
+			mailSender.sendMail(izinTalep.getUser().getUsername(), talepId + " no'lu izin talebiniz İK tarafından reddedilmiştir."
+					, "İzin Talebi Onay Bilgilendirme");			
+		}	
+		
+		if(itrep.save(izinTalep) != null)
+			return true;
+		else
+			return false;
+	}
+
+
 	
 	@Override
 	public List<IzinTalepDto> getIzinTalepForUser() {
@@ -119,6 +171,14 @@ public class IzinTalepServiceImpl implements IzinTalepService{
 		izinTalepDto.setYonetici_surname(izinTalep.getUserYonetici().getSurname());
 		izinTalepDto.setYonetici_username(izinTalep.getUserYonetici().getUsername());
 	}
+
+
+
+
+
+
+
+
 
 
 
